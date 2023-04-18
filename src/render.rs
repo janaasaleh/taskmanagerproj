@@ -93,7 +93,7 @@ pub fn render_processes_layout<B> (f: &mut Frame<B>, layout: Rect, app: &App)
         processes.reverse();
     }
 
-    let headers = ["PID", "Name", "CPU", "Memory"];
+    let headers = ["PID", "Name", "CPU", "Memory","Time Elapsed"];
     let fmt_processes: Vec<Vec<String>> = processes.iter().map(|process| process.format()).collect();
     let rows = fmt_processes.iter().map(|process|
         Row::Data(process.iter())

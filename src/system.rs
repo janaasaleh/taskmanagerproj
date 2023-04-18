@@ -87,4 +87,10 @@ impl System {
             process.kill(sysinfo::Signal::Kill);
         }
     }
+
+    // pub fn stop_process(&mut self, pid: i32) {
+    //     if let Some(process) = self.sysinfo.get_process(pid) {
+    //         process.stop(sysinfo::Signal::Stop);
+    //     }
+    // }
 }
