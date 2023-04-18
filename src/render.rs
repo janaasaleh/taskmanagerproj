@@ -102,7 +102,7 @@ pub fn render_processes_layout<B> (f: &mut Frame<B>, layout: Rect, app: &App)
     // TODO: Show visual indication of sort direction
     Table::new(headers.iter(), rows)
         .block(Block::default().borders(Borders::ALL).title("Processes"))
-        .widths(&[6, 25, 6, 9])
+        .widths(&[6, 25, 6, 9, 15])
         .column_spacing(4)
         .render(f, layout);
 }
