@@ -2,6 +2,7 @@ use sysinfo::{ProcessExt};
 use std::time::{SystemTime, UNIX_EPOCH};
 use crate::system::SYSTEM_START_TIME;
 
+//I'm trying something
 #[derive(PartialEq, Clone)]
 pub struct Process {
     pub pid: i32,
