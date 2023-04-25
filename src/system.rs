@@ -1,7 +1,12 @@
 use sysinfo::{SystemExt, ProcessorExt, ProcessExt};
-
+use std::time::{SystemTime,UNIX_EPOCH};
 use crate::process::Process;
 
+   pub static mut SYSTEM_START_TIME: u64 = 0;
+
+unsafe fn updatesystemstarttime() {
+    SYSTEM_START_TIME = (SystemTime::now()).duration_since(UNIX_EPOCH).unwrap().as_secs();
+}
 pub struct System {
     sysinfo: sysinfo::System,
     pub cpu_usage_history: Vec<u64>,
@@ -28,6 +33,8 @@ impl System {
         // Memory usage
         let mem_total = sysinfo.get_total_memory();
         let mem_usage_history = vec![0; history_width as usize];
+
+        unsafe {updatesystemstarttime();}
 
         System {
             sysinfo,

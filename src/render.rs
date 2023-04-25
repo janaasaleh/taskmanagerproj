@@ -93,7 +93,7 @@ pub fn render_processes_layout<B> (f: &mut Frame<B>, layout: Rect, app: &App)
         processes.reverse();
     }
 
-    let headers = ["PID", "Name", "CPU", "Memory","Time Elapsed"];
+    let headers = ["PID", "Name", "CPU", "Memory","Time Elapsed", "Parent PID"];
     let fmt_processes: Vec<Vec<String>> = processes.iter().map(|process| process.format()).collect();
     let rows = fmt_processes.iter().map(|process|
         Row::Data(process.iter())
@@ -102,7 +102,7 @@ pub fn render_processes_layout<B> (f: &mut Frame<B>, layout: Rect, app: &App)
     // TODO: Show visual indication of sort direction
     Table::new(headers.iter(), rows)
         .block(Block::default().borders(Borders::ALL).title("Processes"))
-        .widths(&[6, 25, 6, 9, 15])
+        .widths(&[6, 25, 6, 9, 15,15])
         .column_spacing(4)
         .render(f, layout);
 }

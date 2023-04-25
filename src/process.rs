@@ -1,5 +1,6 @@
-use sysinfo::ProcessExt;
-use std::time::{Duration, Instant};
+use sysinfo::{ProcessExt};
+use std::time::{SystemTime, UNIX_EPOCH};
+use crate::system::SYSTEM_START_TIME;
 
 #[derive(PartialEq, Clone)]
 pub struct Process {
@@ -7,11 +8,10 @@ pub struct Process {
     pub name: String,
     pub cpu: f32,
     pub mem: u64,
-    pub time: Instant,
-    pub parent: Option<sysinfo::Pid> //not sure of this
-    //pub parent: Option<pid>
-
+    pub time: u64,
+    pub parent: Option<sysinfo::Pid> 
 }
+
 
 impl Process {
     pub fn new(process: &sysinfo::Process) -> Process {
@@ -20,27 +20,48 @@ impl Process {
             name: process.name().to_string(),
             cpu: process.cpu_usage(),
             mem: process.memory(),
-            time: Instant::now(),
+            time: process.start_time(),
             parent: process.parent()
         }
     }
+
+    
 
     pub fn format(&self) -> Vec<String> {
         let parent_string = match self.parent {
             Some(pid) => pid.to_string(),
             None => String::from("N/A")
         };
+        let systemtime: u64;
 
-        let time_string = self.time.elapsed().as_secs_f32().to_string();
-    
+
+        let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
+        unsafe{systemtime = SYSTEM_START_TIME;}
+        let time = now - systemtime + self.time;
+        let process_duration = format_time(time);
+        
+        fn format_time(seconds: u64) -> String {
+            let seconds = seconds as u64;
+            let hours = seconds / 3600;
+            let minutes = (seconds / 60) % 60;
+            let seconds = seconds % 60;
+            format!("{:02}:{:02}:{:02}", hours, minutes, seconds)
+        }
+
+        let systemtime: u64;
+
+        unsafe{systemtime = SYSTEM_START_TIME;}
 
         vec![
             self.pid.to_string(),
             self.name.clone(),
             format!("{:.2}%", self.cpu),
             pretty_bytes::converter::convert((self.mem as f64) * 1000.0),
-            time_string,
+            process_duration,
             parent_string
         ]
+
+        
     }
+
 }
